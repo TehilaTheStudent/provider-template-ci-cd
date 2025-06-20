@@ -103,7 +103,7 @@ $(foreach x,$(XPKGS),$(eval $(call xpkg.build.targets,$(x))))
 # 1: registry/org 2: repo
 define xpkg.release.targets
 xpkg.release.publish.$(1).$(2):
-	echo ----------------------- debug-build/makelib/xpkg.mk $@
+	echo ----------------------- debug-build/makelib/xpkg.mk xpkg.release.publish.$(1).$(2)
 	$(INFO) Pushing package $(1)/$(2):$(VERSION)
 	$(UP) xpkg push \
 		$(foreach p,$(XPKG_LINUX_PLATFORMS),--package $(XPKG_OUTPUT_DIR)/$(p)/$(2)-$(VERSION).xpkg ) \
