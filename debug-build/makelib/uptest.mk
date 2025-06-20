@@ -52,6 +52,7 @@ UPTEST_COMMAND = SKIP_DEPLOY_ARGO=$(SKIP_DEPLOY_ARGO) \
 # - UPTEST_DATASOURCE_PATH (optional), see https://github.com/crossplane/uptest?tab=readme-ov-file#injecting-dynamic-values-and-datasource
 UPTEST_SETUP_SCRIPT ?= test/setup.sh
 uptest: $(UPTEST) $(KUBECTL) $(CHAINSAW) $(CROSSPLANE_CLI) $(YQ)
+	echo ----------------------- debug-build/makelib/uptest.mk $@
 	$(INFO) running automated tests
 	$(UPTEST_COMMAND) || $(FAIL)
 	$(OK) running automated tests
@@ -80,6 +81,7 @@ e2e: build controlplane.down controlplane.up $(UPTEST_LOCAL_DEPLOY_TARGET) uptes
 UPTEST_RENDER_FILES ?=
 UPTEST_EXAMPLES_FOLDER ?= ./examples
 render: $(CROSSPLANE_CLI) ${YQ}
+	echo ----------------------- debug-build/makelib/uptest.mk $@
 	indir="$(UPTEST_EXAMPLES_FOLDER)"; \
 	rm -rf "$(CACHE_DIR)/render"; \
 	mkdir -p "$(CACHE_DIR)/render" || true; \
@@ -130,6 +132,7 @@ render: $(CROSSPLANE_CLI) ${YQ}
 #
 #  Example: `make render.show UPTEST_RENDER_FILES="path/to/example.yaml,another-example.yaml`
 render.show:
+	echo ----------------------- debug-build/makelib/uptest.mk $@
 	$(MAKE) render UPTEST_RENDER_FILES=$${UPTEST_RENDER_FILES} >/dev/null
 	if [ -z $${UPTEST_RENDER_FILES} ]; then \
 		find "$(CACHE_DIR)/render" -type f -name "*.yaml" -exec cat {} \; ; \
@@ -158,6 +161,7 @@ render.show:
 #  Examle: `make render.validate UPTEST_VALIDATE_EXTENSIONS='some/folder`
 UPTEST_VALIDATE_EXTENSIONS ?= crossplane.yaml
 render.validate:
+	echo ----------------------- debug-build/makelib/uptest.mk $@
 	if [ -z $${UPTEST_RENDER_FILES} ]; then \
 		EXAMPLE_FILES=$$(find $(UPTEST_EXAMPLES_FOLDER) -type f -name '*.yaml' ); \
 	else \
@@ -181,6 +185,7 @@ render.validate:
 
 YAMLLINT_FOLDER ?= ./apis
 yamllint: ## Static yamllint check
+	echo ----------------------- debug-build/makelib/uptest.mk $@
 	$(INFO) running yamllint
 	yamllint $(YAMLLINT_FOLDER) || $(FAIL)
 	$(OK) running yamllint

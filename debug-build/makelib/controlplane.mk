@@ -21,6 +21,7 @@ CROSSPLANE_CHART_NAME ?= crossplane
 CONTROLPLANE_DUMP_DIRECTORY ?= $(OUTPUT_DIR)/controlplane-dump
 
 controlplane.up: $(HELM) $(KUBECTL) $(KIND)
+	echo ----------------------- debug-build/makelib/controlplane.mk $@
 	$(INFO) setting up controlplane
 	$(KIND) get kubeconfig --name $(KIND_CLUSTER_NAME) >/dev/null 2>&1 || $(KIND) create cluster --name=$(KIND_CLUSTER_NAME)
 	$(INFO) "setting kubectl context to kind-$(KIND_CLUSTER_NAME)"
@@ -36,11 +37,13 @@ else
 endif
 
 controlplane.down: $(KIND)
+	echo ----------------------- debug-build/makelib/controlplane.mk $@
 	$(INFO) deleting controlplane
 	$(KIND) delete cluster --name=$(KIND_CLUSTER_NAME)
 	$(OK) deleting controlplane
 
 controlplane.dump: $(KUBECTL)
+	echo ----------------------- debug-build/makelib/controlplane.mk $@
 	mkdir -p $(CONTROLPLANE_DUMP_DIRECTORY)
 	$(KUBECTL) cluster-info dump --output-directory $(CONTROLPLANE_DUMP_DIRECTORY) --all-namespaces || true
 	$(KUBECTL) get crossplane --all-namespaces > $(CONTROLPLANE_DUMP_DIRECTORY)/all-crossplane.txt || true

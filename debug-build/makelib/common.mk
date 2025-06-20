@@ -238,6 +238,7 @@ VERSION_MINOR := $(shell echo "$(VERSION)" | cut -d'.' -f2)
 VERSION_PATCH := $(shell echo "$(VERSION)" | cut -d'.' -f3-)
 
 release.tag:
+	echo ----------------------- debug-build/makelib/common.mk $@
 ifneq ($(VERSION_VALID),1)
 	$(error invalid version $(VERSION). must be a semantic version with v[Major].[Minor].[Patch] only)
 endif
@@ -253,6 +254,7 @@ endif
 
 # fail publish if the version is dirty
 version.isdirty:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	if [[ $(VERSION) = *.dirty ]]; then \
 		$(ERR) version '$(VERSION)' is dirty aborting publish. The following files changed: ;\
 		git status --short;\
@@ -278,6 +280,7 @@ endef
 # This is a special target used to support the build container
 
 common.buildvars:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	echo PROJECT_NAME=$(PROJECT_NAME)
 	echo PROJECT_REPO=$(PROJECT_REPO)
 	echo BUILD_HOST=$(HOSTNAME)
@@ -328,17 +331,20 @@ build.done: ; :
 
 # helper targets for building multiple platforms
 do.build.platform.%:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) build.check.platform PLATFORM=$*
 	$(MAKE) build.code.platform PLATFORM=$*
 do.build.platform: $(foreach p,$(PLATFORMS), do.build.platform.$(p))
 
 # helper targets for building multiple platforms
 do.build.artifacts.%:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) build.artifacts.platform PLATFORM=$*
 do.build.artifacts: $(foreach p,$(PLATFORMS), do.build.artifacts.$(p))
 
 # build for all platforms
 build.all:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) build.init
 	$(MAKE) build.check
 	$(MAKE) build.code
@@ -349,6 +355,7 @@ build.all:
 
 # build for a single platform if it's supported
 build:
+	echo ----------------------- debug-build/makelib/common.mk $@
 ifneq ($(BUILD_PLATFORMS),)
 	$(MAKE) build.all PLATFORMS="$(BUILD_PLATFORMS)"
 else
@@ -368,6 +375,7 @@ lint.init: ; :
 lint.run: ; :
 lint.done: ; :
 lint:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) lint.init
 	$(MAKE) lint.run
 	$(MAKE) lint.done
@@ -407,6 +415,7 @@ publish.artifacts: ; :
 
 # publish all releasable artifacts
 publish: version.isdirty
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) publish.init
 	$(MAKE) publish.artifacts
 
@@ -418,6 +427,7 @@ promote.artifacts: ; :
 
 # promote to a release channel
 promote:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) promote.init
 	$(MAKE) promote.artifacts
 
@@ -430,18 +440,21 @@ generate.run: ; :
 generate.done: ; :
 
 generate:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) generate.init
 	$(MAKE) generate.run
 	$(MAKE) generate.done
 
 # prepare for code review
 reviewable:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(MAKE) generate
 	$(MAKE) lint
 	$(MAKE) test
 
 # ensure generate target doesn't create a diff
 check-diff: generate
+	echo ----------------------- debug-build/makelib/common.mk $@
 	$(INFO) checking that branch is clean
 	if git status --porcelain | grep . ; then $(ERR) There are uncommitted changes after running make generate. Please ensure you commit all generated files in this branch after running make generate. && false; else $(OK) branch is clean; fi
 
@@ -488,6 +501,7 @@ export HELPTEXT
 help-special: ; :
 
 help:
+	echo ----------------------- debug-build/makelib/common.mk $@
 	echo "$$HELPTEXT"
 	$(MAKE) help-special
 

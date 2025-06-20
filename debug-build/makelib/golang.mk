@@ -99,17 +99,20 @@ GO_GENERATE_FLAGS = $(GO_BUILDFLAGS) -tags 'generate $(GO_TAGS)'
 # Go Targets
 
 go.build:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) go build $(PLATFORM)
 	$(foreach p,$(GO_STATIC_PACKAGES),@CGO_ENABLED=0 $(GO) build -v -o $(GO_OUT_DIR)/$(lastword $(subst /, ,$(p)))$(GO_OUT_EXT) $(GO_STATIC_FLAGS) $(p) || $(FAIL) ${\n})
 	$(foreach p,$(GO_TEST_PACKAGES) $(GO_LONGHAUL_TEST_PACKAGES),@CGO_ENABLED=0 $(GO) test -c -o $(GO_TEST_OUTPUT)/$(lastword $(subst /, ,$(p)))$(GO_OUT_EXT) $(GO_STATIC_FLAGS) $(p) || $(FAIL) ${\n})
 	$(OK) go build $(PLATFORM)
 
 go.install:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) go install $(PLATFORM)
 	$(foreach p,$(GO_STATIC_PACKAGES),@CGO_ENABLED=0 $(GO) install -v $(GO_STATIC_FLAGS) $(p) || $(FAIL) ${\n})
 	$(OK) go install $(PLATFORM)
 
 go.test.unit:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) go test unit-tests
 	mkdir -p $(GO_TEST_OUTPUT)
 	CGO_ENABLED=$(GO_CGO_ENABLED) $(GOHOST) test -cover $(GO_STATIC_FLAGS) $(GO_PACKAGES) || $(FAIL)
@@ -119,6 +122,7 @@ go.test.unit:
 # TODO(negz): Do providers use this target? crossplane/crossplane doesn't.
 # https://github.com/crossplane/crossplane/blob/master/Makefile#L135
 go.test.integration:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) go test integration-tests
 	mkdir -p $(GO_TEST_OUTPUT) || $(FAIL)
 	CGO_ENABLED=0 $(GOHOST) test $(GO_STATIC_FLAGS) $(GO_INTEGRATION_TEST_PACKAGES) || $(FAIL)
@@ -126,12 +130,14 @@ go.test.integration:
 	$(OK) go test integration-tests
 
 go.lint: $(GOLANGCILINT)
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) golangci-lint
 	mkdir -p $(GO_LINT_OUTPUT)
 	$(GOLANGCILINT) run $(GO_LINT_ARGS) || $(FAIL)
 	$(OK) golangci-lint
 
 go.modules.check:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) verify go modules dependencies are tidy
 	$(GO) mod tidy
 	changed=$$(git diff --exit-code --name-only go.mod go.sum 2>&1) && [ -z "$${changed}" ] || (echo "go.mod is not tidy. Please run 'go mod tidy' and stage the changes" 1>&2; $(FAIL))
@@ -141,15 +147,18 @@ go.modules.check:
 	$(OK) go modules dependencies verified
 
 go.modules.download:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) mod download
 	$(GO) mod download || $(FAIL)
 	$(OK) mod download
 
 go.clean:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(GO) clean -cache -testcache -modcache
 	rm -fr $(GO_BIN_DIR) $(GO_TEST_DIR)
 
 go.generate:
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) go generate $(PLATFORM)
 	CGO_ENABLED=0 $(GOHOST) generate $(GO_GENERATE_FLAGS) $(GO_PACKAGES) $(GO_INTEGRATION_TEST_PACKAGES) || $(FAIL)
 	$(OK) go generate $(PLATFORM)
@@ -192,6 +201,7 @@ help-special: go.help
 # Tools install targets
 
 $(GOLANGCILINT):
+	echo ----------------------- debug-build/makelib/golang.mk $@
 	$(INFO) installing golangci-lint-v$(GOLANGCILINT_VERSION) $(SAFEHOSTPLATFORM)
 	mkdir -p $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)
 	curl -fsSL https://github.com/golangci/golangci-lint/releases/download/v$(GOLANGCILINT_VERSION)/golangci-lint-$(GOLANGCILINT_VERSION)-$(SAFEHOSTPLATFORM).tar.gz | tar -xz --strip-components=1 -C $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)

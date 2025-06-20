@@ -37,10 +37,12 @@ PRE_RELEASE ?= false
 # Targets
 
 output.init:
+	echo ----------------------- debug-build/makelib/output.mk $@
 	mkdir -p $(OUTPUT_DIR)
 	echo "$(VERSION)" > $(OUTPUT_DIR)/version
 
 output.clean:
+	echo ----------------------- debug-build/makelib/output.mk $@
 	rm -fr $(OUTPUT_DIR)
 
 # if S3_BUCKET is set, add targets for publishing and promoting artifacts
@@ -57,11 +59,13 @@ $(error the BRANCH_NAME variable must be set for publishing to the given S3_BUCK
 endif
 
 output.publish:
+	echo ----------------------- debug-build/makelib/output.mk $@
 	$(INFO) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
 	$(S3_SYNC_DEL) $(OUTPUT_DIR) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) || $(FAIL)
 	$(OK) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
 
 output.promote:
+	echo ----------------------- debug-build/makelib/output.mk $@
 	$(INFO) promoting s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION)
 	$(S3_SYNC_DEL) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION) || $(FAIL)
 ifneq ($(PRE_RELEASE),true)

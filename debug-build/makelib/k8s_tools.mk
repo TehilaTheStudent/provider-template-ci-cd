@@ -88,6 +88,7 @@ YQ := $(TOOLS_HOST_DIR)/yq-$(YQ_VERSION)
 # Common Targets
 
 k8s_tools.buildvars:
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	echo KCL=$(KCL)
 	echo KIND=$(KIND)
 	echo KUBECTL=$(KUBECTL)
@@ -106,6 +107,7 @@ build.vars: k8s_tools.buildvars
 
 # istio download and install
 $(ISTIO):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing istio $(ISTIO_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)/tmp-istio || $(FAIL)
 	curl --progress-bar -fsSL https://github.com/istio/istio/releases/download/$(ISTIO_VERSION)/istio-$(ISTIO_VERSION)-$(ISTIO_DOWNLOAD_TUPLE).tar.gz | tar -xz -C $(TOOLS_HOST_DIR)/tmp-istio || $(FAIL)
@@ -115,6 +117,7 @@ $(ISTIO):
 
 # kcl download and install
 $(KCL):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing kcl $(KCL_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)/tmp-kcl || $(FAIL)
 	mkdir -p $(TOOLS_HOST_DIR)
@@ -126,6 +129,7 @@ $(KCL):
 
 # kind download and install
 $(KIND):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing kind $(KIND_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR) || $(FAIL)
 	curl -fsSLo $(KIND) https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_VERSION)/kind-$(SAFEHOSTPLATFORM) || $(FAIL)
@@ -134,6 +138,7 @@ $(KIND):
 
 # kubectl download and install
 $(KUBECTL):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing kubectl $(KUBECTL_VERSION)
 	curl -fsSLo $(KUBECTL) --create-dirs https://storage.googleapis.com/kubernetes-release/release/$(KUBECTL_VERSION)/bin/$(HOSTOS)/$(SAFEHOSTARCH)/kubectl || $(FAIL)
 	chmod +x $(KUBECTL)
@@ -141,6 +146,7 @@ $(KUBECTL):
 
 # kustomize download and install
 $(KUSTOMIZE):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing kustomize $(KUSTOMIZE_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)/tmp-kustomize
 	curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/$(KUSTOMIZE_VERSION)/kustomize_$(KUSTOMIZE_VERSION)_$(SAFEHOST_PLATFORM).tar.gz | tar -xz -C $(TOOLS_HOST_DIR)/tmp-kustomize
@@ -150,6 +156,7 @@ $(KUSTOMIZE):
 
 # olm-bundle download and install
 $(OLMBUNDLE):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing olm-bundle $(OLMBUNDLE_VERSION)
 	curl -fsSLo $(OLMBUNDLE) https://github.com/upbound/olm-bundle/releases/download/$(OLMBUNDLE_VERSION)/olm-bundle_$(SAFEHOSTPLATFORM) || $(FAIL)
 	chmod +x $(OLMBUNDLE)
@@ -157,6 +164,7 @@ $(OLMBUNDLE):
 
 # up download and install
 $(UP):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing up $(UP_VERSION)
 	curl -fsSLo $(UP) --create-dirs https://cli.upbound.io/$(UP_CHANNEL)/$(UP_VERSION)/bin/$(SAFEHOST_PLATFORM)/up?source=build || $(FAIL)
 	chmod +x $(UP)
@@ -164,6 +172,7 @@ $(UP):
 
 # Crossplane CLI download and install
 $(CROSSPLANE_CLI):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing Crossplane CLI $(CROSSPLANE_CLI_VERSION)
 	curl -fsSLo $(CROSSPLANE_CLI) --create-dirs https://releases.crossplane.io/$(CROSSPLANE_CLI_CHANNEL)/$(CROSSPLANE_CLI_VERSION)/bin/$(SAFEHOST_PLATFORM)/crank?source=build || $(FAIL)
 	chmod +x $(CROSSPLANE_CLI)
@@ -171,6 +180,7 @@ $(CROSSPLANE_CLI):
 
 # helm download and install
 $(HELM):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing helm $(HELM_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)/tmp-helm
 	curl -fsSL https://get.helm.sh/helm-$(HELM_VERSION)-$(SAFEHOSTPLATFORM).tar.gz | tar -xz -C $(TOOLS_HOST_DIR)/tmp-helm
@@ -180,6 +190,7 @@ $(HELM):
 
 # kuttl download and install
 $(KUTTL):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing kuttl $(KUTTL_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)
 	curl -fsSLo $(KUTTL) --create-dirs https://github.com/kudobuilder/kuttl/releases/download/v$(KUTTL_VERSION)/kubectl-kuttl_$(KUTTL_VERSION)_$(HOST_PLATFORM) || $(FAIL)
@@ -188,6 +199,7 @@ $(KUTTL):
 
 # chainsaw download and install
 $(CHAINSAW):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing chainsaw $(CHAINSAW_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR)
 	curl -fsSLo $(CHAINSAW).tar.gz --create-dirs https://github.com/kyverno/chainsaw/releases/download/v$(CHAINSAW_VERSION)/chainsaw_$(SAFEHOST_PLATFORM).tar.gz || $(FAIL)
@@ -199,6 +211,7 @@ $(CHAINSAW):
 
 # uptest download and install
 $(UPTEST):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing uptest $(UPTEST)
 	mkdir -p $(TOOLS_HOST_DIR)
 	curl -fsSLo $(UPTEST) https://github.com/crossplane/uptest/releases/download/$(UPTEST_VERSION)/uptest_$(SAFEHOSTPLATFORM) || $(FAIL)
@@ -207,6 +220,7 @@ $(UPTEST):
 
 # yq download and install
 $(YQ):
+	echo ----------------------- debug-build/makelib/k8s_tools.mk $@
 	$(INFO) installing yq $(YQ_VERSION)
 	mkdir -p $(TOOLS_HOST_DIR) && \
 	curl -fsSLo $(YQ) https://github.com/mikefarah/yq/releases/download/$(YQ_VERSION)/yq_$(SAFEHOST_PLATFORM) && \
