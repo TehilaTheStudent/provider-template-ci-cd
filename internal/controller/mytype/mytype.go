@@ -35,9 +35,9 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 	"github.com/crossplane/crossplane-runtime/pkg/statemetrics"
 
-	"github.com/crossplane/provider-template/apis/sample/v1alpha1"
-	apisv1alpha1 "github.com/crossplane/provider-template/apis/v1alpha1"
-	"github.com/crossplane/provider-template/internal/features"
+	"github.com/tehilathestudent/provider-template-ci-cd/apis/sample/v1alpha1"
+	apisv1alpha1 "github.com/tehilathestudent/provider-template-ci-cd/apis/v1alpha1"
+	"github.com/tehilathestudent/provider-template-ci-cd/internal/features"
 )
 
 const (

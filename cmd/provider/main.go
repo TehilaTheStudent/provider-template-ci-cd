@@ -45,11 +45,11 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 	"github.com/crossplane/crossplane-runtime/pkg/statemetrics"
 
-	"github.com/crossplane/provider-template/apis"
-	"github.com/crossplane/provider-template/apis/v1alpha1"
-	template "github.com/crossplane/provider-template/internal/controller"
-	"github.com/crossplane/provider-template/internal/features"
-	"github.com/crossplane/provider-template/internal/version"
+	"github.com/tehilathestudent/provider-template-ci-cd/apis"
+	"github.com/tehilathestudent/provider-template-ci-cd/apis/v1alpha1"
+	template "github.com/tehilathestudent/provider-template-ci-cd/internal/controller"
+	"github.com/tehilathestudent/provider-template-ci-cd/internal/features"
+	"github.com/tehilathestudent/provider-template-ci-cd/internal/version"
 )
 
 func main() {

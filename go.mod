@@ -1,4 +1,4 @@
-module github.com/crossplane/provider-template
+module github.com/tehilathestudent/provider-template-ci-cd
 
 go 1.23.0
 
