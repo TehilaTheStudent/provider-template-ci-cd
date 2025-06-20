@@ -1,12 +1,12 @@
 # ====================================================================================
 # Setup Project
 
-include ../../../build/makelib/common.mk
+include ../../../debug-build/makelib/common.mk
 
 # ====================================================================================
 #  Options
 
-include ../../../build/makelib/imagelight.mk
+include ../../../debug-build/makelib/imagelight.mk
 
 # ====================================================================================
 # Targets

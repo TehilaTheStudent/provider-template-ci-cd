@@ -4,12 +4,12 @@ PROJECT_NAME := provider-template
 PROJECT_REPO := github.com/crossplane/$(PROJECT_NAME)
 
 PLATFORMS ?= linux_amd64 linux_arm64
--include build/makelib/common.mk
+-include debug-build/makelib/common.mk
 
 # ====================================================================================
 # Setup Output
 
--include build/makelib/output.mk
+-include debug-build/makelib/output.mk
 
 # ====================================================================================
 # Setup Go
@@ -21,18 +21,18 @@ GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += cmd internal apis
 GO111MODULE = on
 GOLANGCILINT_VERSION = 2.1.2
--include build/makelib/golang.mk
+-include debug-build/makelib/golang.mk
 
 # ====================================================================================
 # Setup Kubernetes tools
 
--include build/makelib/k8s_tools.mk
+-include debug-build/makelib/k8s_tools.mk
 
 # ====================================================================================
 # Setup Images
 
 IMAGES = provider-template
--include build/makelib/imagelight.mk
+-include debug-build/makelib/imagelight.mk
 
 # ====================================================================================
 # Setup XPKG
@@ -42,7 +42,7 @@ XPKG_REG_ORGS ?= xpkg.upbound.io/crossplane
 # inferred.
 XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/crossplane
 XPKGS = provider-template
--include build/makelib/xpkg.mk
+-include debug-build/makelib/xpkg.mk
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
 # we ensure image is present in daemon.

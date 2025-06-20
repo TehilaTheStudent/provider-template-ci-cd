@@ -142,20 +142,20 @@ go.modules.check:
 
 go.modules.download:
 	$(INFO) mod download
-	@$(GO) mod download || $(FAIL)
-	@$(OK) mod download
+	$(GO) mod download || $(FAIL)
+	$(OK) mod download
 
 go.clean:
-	@$(GO) clean -cache -testcache -modcache
-	@rm -fr $(GO_BIN_DIR) $(GO_TEST_DIR)
+	$(GO) clean -cache -testcache -modcache
+	rm -fr $(GO_BIN_DIR) $(GO_TEST_DIR)
 
 go.generate:
-	@$(INFO) go generate $(PLATFORM)
-	@CGO_ENABLED=0 $(GOHOST) generate $(GO_GENERATE_FLAGS) $(GO_PACKAGES) $(GO_INTEGRATION_TEST_PACKAGES) || $(FAIL)
-	@$(OK) go generate $(PLATFORM)
-	@$(INFO) go mod tidy
-	@$(GOHOST) mod tidy || $(FAIL)
-	@$(OK) go mod tidy
+	$(INFO) go generate $(PLATFORM)
+	CGO_ENABLED=0 $(GOHOST) generate $(GO_GENERATE_FLAGS) $(GO_PACKAGES) $(GO_INTEGRATION_TEST_PACKAGES) || $(FAIL)
+	$(OK) go generate $(PLATFORM)
+	$(INFO) go mod tidy
+	$(GOHOST) mod tidy || $(FAIL)
+	$(OK) go mod tidy
 
 .PHONY: go.build go.install go.test.unit go.test.integration go.lint go.vendor go.vendor.check go.clean go.generate
 
@@ -182,7 +182,7 @@ endef
 export GO_HELPTEXT
 
 go.help:
-	@echo "$$GO_HELPTEXT"
+	echo "$$GO_HELPTEXT"
 
 help-special: go.help
 
@@ -192,12 +192,12 @@ help-special: go.help
 # Tools install targets
 
 $(GOLANGCILINT):
-	@$(INFO) installing golangci-lint-v$(GOLANGCILINT_VERSION) $(SAFEHOSTPLATFORM)
-	@mkdir -p $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)
-	@curl -fsSL https://github.com/golangci/golangci-lint/releases/download/v$(GOLANGCILINT_VERSION)/golangci-lint-$(GOLANGCILINT_VERSION)-$(SAFEHOSTPLATFORM).tar.gz | tar -xz --strip-components=1 -C $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)
-	@mv $(TOOLS_HOST_DIR)/tmp-golangci-lint/golangci-lint $(GOLANGCILINT) || $(FAIL)
-	@rm -fr $(TOOLS_HOST_DIR)/tmp-golangci-lint
-	@$(OK) installing golangci-lint-v$(GOLANGCILINT_VERSION) $(SAFEHOSTPLATFORM)
+	$(INFO) installing golangci-lint-v$(GOLANGCILINT_VERSION) $(SAFEHOSTPLATFORM)
+	mkdir -p $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)
+	curl -fsSL https://github.com/golangci/golangci-lint/releases/download/v$(GOLANGCILINT_VERSION)/golangci-lint-$(GOLANGCILINT_VERSION)-$(SAFEHOSTPLATFORM).tar.gz | tar -xz --strip-components=1 -C $(TOOLS_HOST_DIR)/tmp-golangci-lint || $(FAIL)
+	mv $(TOOLS_HOST_DIR)/tmp-golangci-lint/golangci-lint $(GOLANGCILINT) || $(FAIL)
+	rm -fr $(TOOLS_HOST_DIR)/tmp-golangci-lint
+	$(OK) installing golangci-lint-v$(GOLANGCILINT_VERSION) $(SAFEHOSTPLATFORM)
 
 # These targets are deprecated but are still used by some existing repos.
 # The modules targets should be used instead.

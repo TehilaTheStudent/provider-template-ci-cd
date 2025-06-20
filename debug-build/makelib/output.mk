@@ -37,15 +37,15 @@ PRE_RELEASE ?= false
 # Targets
 
 output.init:
-	@mkdir -p $(OUTPUT_DIR)
-	@echo "$(VERSION)" > $(OUTPUT_DIR)/version
+	mkdir -p $(OUTPUT_DIR)
+	echo "$(VERSION)" > $(OUTPUT_DIR)/version
 
 output.clean:
-	@rm -fr $(OUTPUT_DIR)
+	rm -fr $(OUTPUT_DIR)
 
 # if S3_BUCKET is set, add targets for publishing and promoting artifacts
 ifeq ($(S3_BUCKET),)
-	@$(INFO) skipped publishing outputs to an s3 bucket since 'S3_BUCKET' is not set
+	$(INFO) skipped publishing outputs to an s3 bucket since 'S3_BUCKET' is not set
 else
 
 ifeq ($(CHANNEL),)
@@ -57,17 +57,17 @@ $(error the BRANCH_NAME variable must be set for publishing to the given S3_BUCK
 endif
 
 output.publish:
-	@$(INFO) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
-	@$(S3_SYNC_DEL) $(OUTPUT_DIR) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) || $(FAIL)
-	@$(OK) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
+	$(INFO) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
+	$(S3_SYNC_DEL) $(OUTPUT_DIR) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) || $(FAIL)
+	$(OK) publishing outputs to s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)
 
 output.promote:
-	@$(INFO) promoting s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION)
-	@$(S3_SYNC_DEL) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION) || $(FAIL)
+	$(INFO) promoting s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION)
+	$(S3_SYNC_DEL) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION) || $(FAIL)
 ifneq ($(PRE_RELEASE),true)
-	@$(S3_SYNC_DEL) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) s3://$(S3_BUCKET)/$(CHANNEL)/current || $(FAIL)
+	$(S3_SYNC_DEL) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION) s3://$(S3_BUCKET)/$(CHANNEL)/current || $(FAIL)
 endif
-	@$(OK) promoting s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION)
+	$(OK) promoting s3://$(S3_BUCKET)/$(CHANNEL)/$(VERSION)
 
 publish.artifacts: output.publish
 promote.artifacts: output.promote

@@ -65,7 +65,7 @@ endif
 # Image Targets
 
 do.img.clean:
-	@for i in $(CLEAN_IMAGES); do \
+	for i in $(CLEAN_IMAGES); do \
 		if [ -n "$$(docker images -q $$i)" ]; then \
 			for c in $$(docker ps -a -q --no-trunc --filter=ancestor=$$i); do \
 				if [ "$$c" != "$(SELF_CID)" ]; then \
@@ -81,28 +81,28 @@ do.img.clean:
 
 # this will clean everything for this build
 img.clean:
-	@$(INFO) cleaning images for $(BUILD_REGISTRY)
-	@$(MAKE) do.img.clean CLEAN_IMAGES="$(shell docker images | grep -E '^$(BUILD_REGISTRY)/' | awk '{print $$1":"$$2}')"
-	@$(OK) cleaning images for $(BUILD_REGISTRY)
+	$(INFO) cleaning images for $(BUILD_REGISTRY)
+	$(MAKE) do.img.clean CLEAN_IMAGES="$(shell docker images | grep -E '^$(BUILD_REGISTRY)/' | awk '{print $$1":"$$2}')"
+	$(OK) cleaning images for $(BUILD_REGISTRY)
 
 img.done:
-	@rm -fr $(IMAGE_TEMP_DIR)
+	rm -fr $(IMAGE_TEMP_DIR)
 
 # 1: registry 2: image
 define repo.targets
 img.release.publish.$(1).$(2):
-	@$(MAKE) -C $(IMAGE_DIR)/$(2) IMAGE_PLATFORMS=$(IMAGE_PLATFORMS) IMAGE=$(1)/$(2):$(VERSION) img.publish
+	$(MAKE) -C $(IMAGE_DIR)/$(2) IMAGE_PLATFORMS=$(IMAGE_PLATFORMS) IMAGE=$(1)/$(2):$(VERSION) img.publish
 img.release.publish: img.release.publish.$(1).$(2)
 
 img.release.promote.$(1).$(2):
-	@$(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
-	@[ "$(CHANNEL)" = "master" ] || $(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(VERSION)-$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
+	$(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
+	[ "$(CHANNEL)" = "master" ] || $(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(VERSION)-$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
 img.release.promote: img.release.promote.$(1).$(2)
 
 img.release.clean.$(1).$(2):
-	@[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION))" ] || docker rmi $(1)/$(2):$(VERSION)
-	@[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION)-$(CHANNEL))" ] || docker rmi $(1)/$(2):$(VERSION)-$(CHANNEL)
-	@[ -z "$$$$(docker images -q $(1)/$(2):$(CHANNEL))" ] || docker rmi $(1)/$(2):$(CHANNEL)
+	[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION))" ] || docker rmi $(1)/$(2):$(VERSION)
+	[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION)-$(CHANNEL))" ] || docker rmi $(1)/$(2):$(VERSION)-$(CHANNEL)
+	[ -z "$$$$(docker images -q $(1)/$(2):$(CHANNEL))" ] || docker rmi $(1)/$(2):$(CHANNEL)
 img.release.clean: img.release.clean.$(1).$(2)
 endef
 $(foreach r,$(REGISTRY_ORGS), $(foreach i,$(IMAGES),$(eval $(call repo.targets,$(r),$(i)))))
@@ -111,10 +111,10 @@ $(foreach r,$(REGISTRY_ORGS), $(foreach i,$(IMAGES),$(eval $(call repo.targets,$
 # Common Targets
 
 do.build.image.%:
-	@$(MAKE) -C $(IMAGE_DIR)/$* IMAGE_PLATFORMS=$(IMAGE_PLATFORM) IMAGE=$(BUILD_REGISTRY)/$*-$(ARCH) img.build
+	$(MAKE) -C $(IMAGE_DIR)/$* IMAGE_PLATFORMS=$(IMAGE_PLATFORM) IMAGE=$(BUILD_REGISTRY)/$*-$(ARCH) img.build
 do.build.images: $(foreach i,$(IMAGES), do.build.image.$(i))
 do.skip.images:
-	@$(OK) Skipping image build for unsupported platform $(IMAGE_PLATFORM)
+	$(OK) Skipping image build for unsupported platform $(IMAGE_PLATFORM)
 
 ifneq ($(filter $(IMAGE_PLATFORM),$(IMAGE_PLATFORMS_LIST)),)
 build.artifacts.platform: do.build.images

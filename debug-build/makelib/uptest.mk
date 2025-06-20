@@ -52,9 +52,9 @@ UPTEST_COMMAND = SKIP_DEPLOY_ARGO=$(SKIP_DEPLOY_ARGO) \
 # - UPTEST_DATASOURCE_PATH (optional), see https://github.com/crossplane/uptest?tab=readme-ov-file#injecting-dynamic-values-and-datasource
 UPTEST_SETUP_SCRIPT ?= test/setup.sh
 uptest: $(UPTEST) $(KUBECTL) $(CHAINSAW) $(CROSSPLANE_CLI) $(YQ)
-	@$(INFO) running automated tests
+	$(INFO) running automated tests
 	$(UPTEST_COMMAND) || $(FAIL)
-	@$(OK) running automated tests
+	$(OK) running automated tests
 
 # Run uptest together with all dependencies. Use `make e2e UPTEST_SKIP_DELET=true` to skip deletion of resources.
 e2e: build controlplane.down controlplane.up $(UPTEST_LOCAL_DEPLOY_TARGET) uptest #
@@ -80,7 +80,7 @@ e2e: build controlplane.down controlplane.up $(UPTEST_LOCAL_DEPLOY_TARGET) uptes
 UPTEST_RENDER_FILES ?=
 UPTEST_EXAMPLES_FOLDER ?= ./examples
 render: $(CROSSPLANE_CLI) ${YQ}
-	@indir="$(UPTEST_EXAMPLES_FOLDER)"; \
+	indir="$(UPTEST_EXAMPLES_FOLDER)"; \
 	rm -rf "$(CACHE_DIR)/render"; \
 	mkdir -p "$(CACHE_DIR)/render" || true; \
 	if [ -z $${UPTEST_RENDER_FILES} ]; then \
@@ -130,8 +130,8 @@ render: $(CROSSPLANE_CLI) ${YQ}
 #
 #  Example: `make render.show UPTEST_RENDER_FILES="path/to/example.yaml,another-example.yaml`
 render.show:
-	@$(MAKE) render UPTEST_RENDER_FILES=$${UPTEST_RENDER_FILES} >/dev/null
-	@if [ -z $${UPTEST_RENDER_FILES} ]; then \
+	$(MAKE) render UPTEST_RENDER_FILES=$${UPTEST_RENDER_FILES} >/dev/null
+	if [ -z $${UPTEST_RENDER_FILES} ]; then \
 		find "$(CACHE_DIR)/render" -type f -name "*.yaml" -exec cat {} \; ; \
 	else \
 		EXAMPLE_FILES=$$(echo $${UPTEST_RENDER_FILES} | sed 's/,/ /g'); \
@@ -158,7 +158,7 @@ render.show:
 #  Examle: `make render.validate UPTEST_VALIDATE_EXTENSIONS='some/folder`
 UPTEST_VALIDATE_EXTENSIONS ?= crossplane.yaml
 render.validate:
-	@if [ -z $${UPTEST_RENDER_FILES} ]; then \
+	if [ -z $${UPTEST_RENDER_FILES} ]; then \
 		EXAMPLE_FILES=$$(find $(UPTEST_EXAMPLES_FOLDER) -type f -name '*.yaml' ); \
 	else \
 		EXAMPLE_FILES=$$(echo $${UPTEST_RENDER_FILES} | sed 's/,/ /g'); \
@@ -181,9 +181,9 @@ render.validate:
 
 YAMLLINT_FOLDER ?= ./apis
 yamllint: ## Static yamllint check
-	@$(INFO) running yamllint
-	@yamllint $(YAMLLINT_FOLDER) || $(FAIL)
-	@$(OK) running yamllint
+	$(INFO) running yamllint
+	yamllint $(YAMLLINT_FOLDER) || $(FAIL)
+	$(OK) running yamllint
 
 .PHONY: uptest e2e render yamllint
 

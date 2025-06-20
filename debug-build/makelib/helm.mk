@@ -72,61 +72,61 @@ HELM_CHART_VERSION := $(VERSION:v%=%)
 # ====================================================================================
 # Helm Targets
 $(HELM_HOME): $(HELM)
-	@mkdir -p $(HELM_HOME)
-	@if [ "$(USE_HELM3)" == "false" ]; then \
+	mkdir -p $(HELM_HOME)
+	if [ "$(USE_HELM3)" == "false" ]; then \
 		$(HELM) init -c --stable-repo-url=https://charts.helm.sh/stable; \
 	fi
 
 $(HELM_OUTPUT_DIR):
-	@mkdir -p $(HELM_OUTPUT_DIR)
+	mkdir -p $(HELM_OUTPUT_DIR)
 
 define helm.chart
 $(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz: $(HELM_HOME) $(HELM_OUTPUT_DIR) $(shell find $(HELM_CHARTS_DIR)/$(1) -type f)
-	@$(INFO) helm package $(1) $(HELM_CHART_VERSION)
-	@if [ "$(USE_HELM3)" == "false" ]; then \
+	$(INFO) helm package $(1) $(HELM_CHART_VERSION)
+	if [ "$(USE_HELM3)" == "false" ]; then \
 		$(HELM) package --version $(HELM_CHART_VERSION) --app-version $(HELM_CHART_VERSION) --save=false -d $(HELM_OUTPUT_DIR) $(abspath $(HELM_CHARTS_DIR)/$(1)); \
 	else \
 		$(HELM) package --version $(HELM_CHART_VERSION) --app-version $(HELM_CHART_VERSION) -d $(HELM_OUTPUT_DIR) $(abspath $(HELM_CHARTS_DIR)/$(1)); \
 	fi
-	@$(OK) helm package $(1) $(HELM_CHART_VERSION)
+	$(OK) helm package $(1) $(HELM_CHART_VERSION)
 
 helm.generate.$(1): $(HELM_HOME) $(HELM_DOCS)
-	@$(INFO) helm-docs $(1)
+	$(INFO) helm-docs $(1)
 ifneq ($(HELM_DOCS_ENABLED),true)
-	@$(OK) helm docs not enabled [skipped]
+	$(OK) helm docs not enabled [skipped]
 else ifneq ($(HELM_VALUES_TEMPLATE_SKIPPED),true)
-	@$(WARN) helm-docs not supported with templated values.yaml [skipped]
+	$(WARN) helm-docs not supported with templated values.yaml [skipped]
 else
-	@$(HELM_DOCS)
-	@$(OK) helm-docs $(1)
+	$(HELM_DOCS)
+	$(OK) helm-docs $(1)
 endif
 
 helm.generate: helm.generate.$(1)
 
 helm.prepare.$(1): $(HELM_HOME)
-	@$(INFO) helm prepare $(1)
+	$(INFO) helm prepare $(1)
 ifeq ($(HELM_VALUES_TEMPLATE_SKIPPED),true)
-	@$(OK) HELM_VALUES_TEMPLATE_SKIPPED set to true [skipped]
+	$(OK) HELM_VALUES_TEMPLATE_SKIPPED set to true [skipped]
 else
-	@$(WARN) templating helm values.yaml for %%VERSION%% is deprecated, use appVersion and an empty tag instead.
-	@cp -f $(HELM_CHARTS_DIR)/$(1)/values.yaml.tmpl $(HELM_CHARTS_DIR)/$(1)/values.yaml
-	@cd $(HELM_CHARTS_DIR)/$(1) && $(SED_CMD) 's|%%VERSION%%|$(VERSION)|g' values.yaml
-	@$(OK) helm prepare $(1)
+	$(WARN) templating helm values.yaml for %%VERSION%% is deprecated, use appVersion and an empty tag instead.
+	cp -f $(HELM_CHARTS_DIR)/$(1)/values.yaml.tmpl $(HELM_CHARTS_DIR)/$(1)/values.yaml
+	cd $(HELM_CHARTS_DIR)/$(1) && $(SED_CMD) 's|%%VERSION%%|$(VERSION)|g' values.yaml
+	$(OK) helm prepare $(1)
 endif
 
 helm.prepare: helm.prepare.$(1)
 
 helm.lint.$(1): $(HELM_HOME) helm.prepare.$(1)
-	@rm -rf $(abspath $(HELM_CHARTS_DIR)/$(1)/charts)
-	@$(HELM) dependency update $(abspath $(HELM_CHARTS_DIR)/$(1))
-	@$(HELM) lint $(abspath $(HELM_CHARTS_DIR)/$(1)) $(HELM_CHART_LINT_ARGS_$(1)) $(HELM_CHART_LINT_STRICT_ARG)
+	rm -rf $(abspath $(HELM_CHARTS_DIR)/$(1)/charts)
+	$(HELM) dependency update $(abspath $(HELM_CHARTS_DIR)/$(1))
+	$(HELM) lint $(abspath $(HELM_CHARTS_DIR)/$(1)) $(HELM_CHART_LINT_ARGS_$(1)) $(HELM_CHART_LINT_STRICT_ARG)
 
 helm.lint: helm.lint.$(1)
 
 helm.dep.$(1): $(HELM_HOME)
-	@$(INFO) helm dep $(1) $(HELM_CHART_VERSION)
-	@$(HELM) dependency update $(abspath $(HELM_CHARTS_DIR)/$(1))
-	@$(OK) helm dep $(1) $(HELM_CHART_VERSION)
+	$(INFO) helm dep $(1) $(HELM_CHART_VERSION)
+	$(HELM) dependency update $(abspath $(HELM_CHARTS_DIR)/$(1))
+	$(OK) helm dep $(1) $(HELM_CHART_VERSION)
 
 helm.dep: helm.dep.$(1)
 
@@ -135,17 +135,17 @@ endef
 $(foreach p,$(HELM_CHARTS),$(eval $(call helm.chart,$(p))))
 
 $(HELM_INDEX): $(HELM_HOME) $(HELM_OUTPUT_DIR)
-	@$(INFO) helm index
-	@$(HELM) repo index $(HELM_OUTPUT_DIR)
-	@$(OK) helm index
+	$(INFO) helm index
+	$(HELM) repo index $(HELM_OUTPUT_DIR)
+	$(OK) helm index
 
 helm.build: $(HELM_INDEX)
 
 helm.clean:
-	@rm -fr $(HELM_OUTPUT_DIR)
+	rm -fr $(HELM_OUTPUT_DIR)
 
 helm.env: $(HELM)
-	@$(HELM) env
+	$(HELM) env
 
 # ====================================================================================
 # helm
@@ -154,31 +154,31 @@ HELM_TEMP := $(shell mktemp -d)
 HELM_URL := $(HELM_BASE_URL)/$(CHANNEL)
 
 helm.promote: $(HELM_HOME)
-	@$(INFO) promoting helm charts
+	$(INFO) promoting helm charts
 #	copy existing charts to a temp dir, the combine with new charts, reindex, and upload
-	@$(S3_SYNC) s3://$(HELM_S3_BUCKET)/$(CHANNEL) $(HELM_TEMP)
-	@if [ "$(S3_BUCKET)" != "" ]; then \
+	$(S3_SYNC) s3://$(HELM_S3_BUCKET)/$(CHANNEL) $(HELM_TEMP)
+	if [ "$(S3_BUCKET)" != "" ]; then \
 		$(S3_SYNC) s3://$(S3_BUCKET)/build/$(BRANCH_NAME)/$(VERSION)/charts $(HELM_TEMP); \
 	fi
-	@$(HELM) repo index --url $(HELM_URL) $(HELM_TEMP)
-	@$(S3_SYNC_DEL) $(HELM_TEMP) s3://$(HELM_S3_BUCKET)/$(CHANNEL)
+	$(HELM) repo index --url $(HELM_URL) $(HELM_TEMP)
+	$(S3_SYNC_DEL) $(HELM_TEMP) s3://$(HELM_S3_BUCKET)/$(CHANNEL)
 # 	re-upload index.yaml setting cache-control to ensure the file is not cached by http clients
-	@$(S3_CP) --cache-control "private, max-age=0, no-transform" $(HELM_TEMP)/index.yaml s3://$(HELM_S3_BUCKET)/$(CHANNEL)/index.yaml
-	@rm -fr $(HELM_TEMP)
-	@$(OK) promoting helm charts
+	$(S3_CP) --cache-control "private, max-age=0, no-transform" $(HELM_TEMP)/index.yaml s3://$(HELM_S3_BUCKET)/$(CHANNEL)/index.yaml
+	rm -fr $(HELM_TEMP)
+	$(OK) promoting helm charts
 
 define museum.upload
 helm.museum.$(1):
 ifdef MUSEUM_URL
-	@$(INFO) pushing helm charts $(1) to chart museum $(MUSEUM_URL)
+	$(INFO) pushing helm charts $(1) to chart museum $(MUSEUM_URL)
 ifneq ($(MUSEUM_USER)$(MUSEUM_PASS),"")
-	@$(INFO) curl -u $(MUSEUM_USER):$(MUSEUM_PASS) --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
-	@curl -u $(MUSEUM_USER):$(MUSEUM_PASS) --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
+	$(INFO) curl -u $(MUSEUM_USER):$(MUSEUM_PASS) --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
+	curl -u $(MUSEUM_USER):$(MUSEUM_PASS) --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
 else
-	@$(INFO) curl --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
-	@curl --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
+	$(INFO) curl --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
+	curl --data-binary '@$(HELM_OUTPUT_DIR)/$(1)-$(HELM_CHART_VERSION).tgz' $(MUSEUM_URL)/api/charts
 endif
-	@$(OK) pushing helm charts to chart museum
+	$(OK) pushing helm charts to chart museum
 endif
 
 helm.museum: helm.museum.$(1)
@@ -209,7 +209,7 @@ endef
 export HELM_HELPTEXT
 
 helm.help:
-	@echo "$$HELM_HELPTEXT"
+	echo "$$HELM_HELPTEXT"
 
 help-special: helm.help
 
@@ -217,6 +217,6 @@ help-special: helm.help
 # Tools install targets
 
 $(HELM_DOCS):
-	@$(INFO) installing helm-docs
-	@GOBIN=$(TOOLS_HOST_DIR) $(GOHOST) install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION) || $(FAIL)
-	@$(OK) installing helm-docs
+	$(INFO) installing helm-docs
+	GOBIN=$(TOOLS_HOST_DIR) $(GOHOST) install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION) || $(FAIL)
+	$(OK) installing helm-docs

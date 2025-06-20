@@ -36,3 +36,18 @@ guide may also be of use.
 
 [CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md
 [provider-dev]: https://github.com/crossplane/crossplane/blob/master/contributing/guide-provider-development.md
+
+_output
+├── bin
+│   └── linux_amd64
+│       └── provider
+├── version
+└── xpkg
+    └── linux_amd64
+        └── provider-template-v0.0.0-4.g7a97d0c.dirty.xpkg
+
+.cache
+└── tools
+    └── linux_x86_64
+        └── up-v0.28.0
+

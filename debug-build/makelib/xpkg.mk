@@ -78,12 +78,12 @@ UP ?= up
 define xpkg.build.targets
 xpkg.build.$(1):
 ifeq ($(XPKG_CLEANUP_EXAMPLES_ENABLED),true)
-	@rm -rf $(WORK_DIR)/xpkg-cleaned-examples
-	@GOOS=$(HOSTOS) GOARCH=$(TARGETARCH) go run github.com/upbound/uptest/cmd/cleanupexamples@$(XPKG_CLEANUP_EXAMPLES_VERSION) $(XPKG_EXAMPLES_DIR) $(XPKG_PROCESSED_EXAMPLES_DIR) || $(FAIL)
+	rm -rf $(WORK_DIR)/xpkg-cleaned-examples
+	GOOS=$(HOSTOS) GOARCH=$(TARGETARCH) go run github.com/upbound/uptest/cmd/cleanupexamples@$(XPKG_CLEANUP_EXAMPLES_VERSION) $(XPKG_EXAMPLES_DIR) $(XPKG_PROCESSED_EXAMPLES_DIR) || $(FAIL)
 endif
-	@$(INFO) Building package $(1)-$(VERSION).xpkg for $(PLATFORM)
-	@mkdir -p $(OUTPUT_DIR)/xpkg/$(PLATFORM)
-	@controller_arg=$$$$(grep -E '^kind:\s+Provider\s*$$$$' $(XPKG_DIR)/crossplane.yaml > /dev/null && echo "--controller $(BUILD_REGISTRY)/$(1)-$(ARCH)"); \
+	$(INFO) Building package $(1)-$(VERSION).xpkg for $(PLATFORM)
+	mkdir -p $(OUTPUT_DIR)/xpkg/$(PLATFORM)
+	controller_arg=$$$$(grep -E '^kind:\s+Provider\s*$$$$' $(XPKG_DIR)/crossplane.yaml > /dev/null && echo "--controller $(BUILD_REGISTRY)/$(1)-$(ARCH)"); \
 	$(UP) xpkg build \
 		$$$${controller_arg} \
 		--package-root $(XPKG_DIR) \
@@ -91,9 +91,9 @@ endif
 		--examples-root $(XPKG_PROCESSED_EXAMPLES_DIR) \
 		--ignore $(XPKG_IGNORE) \
 		--output $(XPKG_OUTPUT_DIR)/$(PLATFORM)/$(1)-$(VERSION).xpkg || $(FAIL)
-	@$(OK) Built package $(1)-$(VERSION).xpkg for $(PLATFORM)
+	$(OK) Built package $(1)-$(VERSION).xpkg for $(PLATFORM)
 ifeq ($(XPKG_CLEANUP_EXAMPLES_ENABLED),true)
-	@rm -rf $(WORK_DIR)/xpkg-cleaned-examples
+	rm -rf $(WORK_DIR)/xpkg-cleaned-examples
 endif
 xpkg.build: xpkg.build.$(1)
 endef
@@ -102,18 +102,18 @@ $(foreach x,$(XPKGS),$(eval $(call xpkg.build.targets,$(x))))
 # 1: registry/org 2: repo
 define xpkg.release.targets
 xpkg.release.publish.$(1).$(2):
-	@$(INFO) Pushing package $(1)/$(2):$(VERSION)
-	@$(UP) xpkg push \
+	$(INFO) Pushing package $(1)/$(2):$(VERSION)
+	$(UP) xpkg push \
 		$(foreach p,$(XPKG_LINUX_PLATFORMS),--package $(XPKG_OUTPUT_DIR)/$(p)/$(2)-$(VERSION).xpkg ) \
 		$(1)/$(2):$(VERSION) || $(FAIL)
-	@$(OK) Pushed package $(1)/$(2):$(VERSION)
+	$(OK) Pushed package $(1)/$(2):$(VERSION)
 xpkg.release.publish: xpkg.release.publish.$(1).$(2)
 
 xpkg.release.promote.$(1).$(2):
-	@$(INFO) Promoting package from $(1)/$(2):$(VERSION) to $(1)/$(2):$(CHANNEL)
-	@docker buildx imagetools create -t $(1)/$(2):$(CHANNEL) $(1)/$(2):$(VERSION)
-	@[ "$(CHANNEL)" = "master" ] || docker buildx imagetools create -t $(1)/$(2):$(VERSION)-$(CHANNEL) $(1)/$(2):$(VERSION)
-	@$(OK) Promoted package from $(1)/$(2):$(VERSION) to $(1)/$(2):$(CHANNEL)
+	$(INFO) Promoting package from $(1)/$(2):$(VERSION) to $(1)/$(2):$(CHANNEL)
+	docker buildx imagetools create -t $(1)/$(2):$(CHANNEL) $(1)/$(2):$(VERSION)
+	[ "$(CHANNEL)" = "master" ] || docker buildx imagetools create -t $(1)/$(2):$(VERSION)-$(CHANNEL) $(1)/$(2):$(VERSION)
+	$(OK) Promoted package from $(1)/$(2):$(VERSION) to $(1)/$(2):$(CHANNEL)
 xpkg.release.promote: xpkg.release.promote.$(1).$(2)
 endef
 $(foreach r,$(XPKG_REG_ORGS), $(foreach x,$(XPKGS),$(eval $(call xpkg.release.targets,$(r),$(x)))))
@@ -123,7 +123,7 @@ $(foreach r,$(XPKG_REG_ORGS), $(foreach x,$(XPKGS),$(eval $(call xpkg.release.ta
 
 do.build.xpkgs: $(foreach i,$(XPKGS),xpkg.build.$(i))
 do.skip.xpkgs:
-	@$(OK) Skipping xpkg build for unsupported platform $(IMAGE_PLATFORM)
+	$(OK) Skipping xpkg build for unsupported platform $(IMAGE_PLATFORM)
 
 ifneq ($(filter $(XPKG_PLATFORM),$(XPKG_PLATFORMS_LIST)),)
 build.artifacts.platform: do.build.xpkgs

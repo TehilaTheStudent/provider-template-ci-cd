@@ -300,31 +300,31 @@ build.vars: common.buildvars
 
 # run init steps before building code
 # these will run once regardless of how many platforms we are building
-build.init: ; @:
+build.init: ; :
 
 # check the code with fmt, lint, vet and other source level checks pre build
 # these will run once regardless of how many platforms we are building
-build.check: ; @:
+build.check: ; :
 
 # check the code with fmt, lint, vet and other source level checks pre build
 # these will run for each platform being built
-build.check.platform: ; @:
+build.check.platform: ; :
 
 # build code. this will run once regardless of platform
-build.code: ; @:
+build.code: ; :
 
 # build code. this will run for each platform built
-build.code.platform: ; @:
+build.code.platform: ; :
 
 # build releasable artifacts. this will run once regardless of platform
-build.artifacts: ; @:
+build.artifacts: ; :
 
 # build releasable artifacts. this will run for each platform being built
-build.artifacts.platform: ; @:
+build.artifacts.platform: ; :
 
 # runs at the end of the build to do any cleanup, caching etc.
 # these will run once regardless of how many platforms we are building
-build.done: ; @:
+build.done: ; :
 
 # helper targets for building multiple platforms
 do.build.platform.%:
@@ -352,7 +352,7 @@ build:
 ifneq ($(BUILD_PLATFORMS),)
 	$(MAKE) build.all PLATFORMS="$(BUILD_PLATFORMS)"
 else
-	@:
+	:
 endif
 
 # clean all files created during the build.
@@ -364,18 +364,18 @@ distclean: clean
 	rm -fr $(CACHE_DIR)
 
 # run lint and other code analysis
-lint.init: ; @:
-lint.run: ; @:
-lint.done: ; @:
+lint.init: ; :
+lint.run: ; :
+lint.done: ; :
 lint:
 	$(MAKE) lint.init
 	$(MAKE) lint.run
 	$(MAKE) lint.done
 
 # unit tests
-test.init: ; @:
-test.run: ; @:
-test.done: ; @:
+test.init: ; :
+test.run: ; :
+test.done: ; :
 
 test:
 	$(MAKE) test.init
@@ -383,9 +383,9 @@ test:
 	$(MAKE) test.done
 
 # e2e tests
-e2e.init: ; @:
-e2e.run: ; @:
-e2e.done: ; @:
+e2e.init: ; :
+e2e.run: ; :
+e2e.done: ; :
 
 e2e:
 	$(MAKE) e2e.init
@@ -400,10 +400,10 @@ e2e:
 # Release Targets
 
 # run init steps before publishing
-publish.init: ; @:
+publish.init: ; :
 
 # publish artifacts
-publish.artifacts: ; @:
+publish.artifacts: ; :
 
 # publish all releasable artifacts
 publish: version.isdirty
@@ -411,10 +411,10 @@ publish: version.isdirty
 	$(MAKE) publish.artifacts
 
 # promote init runs before promote
-promote.init: ; @:
+promote.init: ; :
 
 # promote all artifacts to a release channel
-promote.artifacts: ; @:
+promote.artifacts: ; :
 
 # promote to a release channel
 promote:
@@ -425,9 +425,9 @@ promote:
 tag: release.tag
 
 # run code generation
-generate.init: ; @:
-generate.run: ; @:
-generate.done: ; @:
+generate.init: ; :
+generate.run: ; :
+generate.done: ; :
 
 generate:
 	$(MAKE) generate.init
@@ -485,7 +485,7 @@ Release Options:
 endef
 export HELPTEXT
 
-help-special: ; @:
+help-special: ; :
 
 help:
 	echo "$$HELPTEXT"
