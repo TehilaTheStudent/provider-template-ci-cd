@@ -198,6 +198,14 @@ jobs:
           username: ${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_USR }}
           password: ${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_PSW }}
 
+      - name: Login to swr
+        uses: docker/login-action@v1
+        if: env.SWR_USR != ''
+        with:
+          registry: swr.ap-southeast-3.myhuaweicloud.com
+          username: ${{ secrets.SWR_USR }}
+          password: ${{ secrets.SWR_PSW }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
