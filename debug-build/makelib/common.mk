@@ -60,7 +60,7 @@ FAIL	= (echo ${TIME} ${RED}[FAIL]${CNone} && false)
 # Build Options
 
 # Set V=1 to turn on more verbose build
-V ?= 0
+V ?= 1
 ifeq ($(V),1)
 MAKEFLAGS += VERBOSE=1
 else
@@ -68,7 +68,7 @@ MAKEFLAGS += --no-print-directory
 endif
 
 # Set DEBUG=1 to turn on a debug build
-DEBUG ?= 0
+DEBUG ?= 1
 
 # ====================================================================================
 # Release Options
