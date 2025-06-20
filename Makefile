@@ -73,7 +73,7 @@ submodules:
 # users to duplicate their build cache, but for now we just make it easier to
 # identify its location in CI so that we cache between builds.
 go.cachedir:
-	go env GOCACHE
+	@go env GOCACHE
 
 # NOTE(hasheddan): we must ensure up is installed in tool cache prior to build
 # as including the k8s_tools machinery prior to the xpkg machinery sets UP to
