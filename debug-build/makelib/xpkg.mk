@@ -103,6 +103,7 @@ $(foreach x,$(XPKGS),$(eval $(call xpkg.build.targets,$(x))))
 # 1: registry/org 2: repo
 define xpkg.release.targets
 xpkg.release.publish.$(1).$(2):
+	echo ----------------------- debug-build/makelib/xpkg.mk $@
 	$(INFO) Pushing package $(1)/$(2):$(VERSION)
 	$(UP) xpkg push \
 		$(foreach p,$(XPKG_LINUX_PLATFORMS),--package $(XPKG_OUTPUT_DIR)/$(p)/$(2)-$(VERSION).xpkg ) \
@@ -124,6 +125,7 @@ $(foreach r,$(XPKG_REG_ORGS), $(foreach x,$(XPKGS),$(eval $(call xpkg.release.ta
 
 do.build.xpkgs: $(foreach i,$(XPKGS),xpkg.build.$(i))
 do.skip.xpkgs:
+	echo ----------------------- debug-build/makelib/xpkg.mk $@
 	$(OK) Skipping xpkg build for unsupported platform $(IMAGE_PLATFORM)
 
 ifneq ($(filter $(XPKG_PLATFORM),$(XPKG_PLATFORMS_LIST)),)
