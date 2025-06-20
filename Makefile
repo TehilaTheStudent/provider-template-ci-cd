@@ -42,7 +42,9 @@ include debug-build/makelib/imagelight.mk
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= xpkg.upbound.io/tehilathestudent
+# XPKG_REG_ORGS ?= xpkg.upbound.io/tehilathestudent
+XPKG_REG_ORGS ?= swr.ap-southeast-3.myhuaweicloud.com/codearts-sdlc
+
 # NOTE(hasheddan): skip promoting on xpkg.upbound.io as channel tags are
 # inferred.
 XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/tehilathestudent
