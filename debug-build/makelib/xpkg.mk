@@ -78,6 +78,8 @@ UP ?= up
 define xpkg.build.targets
 xpkg.build.$(1):
 	echo ----------------------- debug-build/makelib/xpkg.mk xpkg.build.$(1)
+	echo docker images:
+	docker images
 ifeq ($(XPKG_CLEANUP_EXAMPLES_ENABLED),true)
 	rm -rf $(WORK_DIR)/xpkg-cleaned-examples
 	GOOS=$(HOSTOS) GOARCH=$(TARGETARCH) go run github.com/upbound/uptest/cmd/cleanupexamples@$(XPKG_CLEANUP_EXAMPLES_VERSION) $(XPKG_EXAMPLES_DIR) $(XPKG_PROCESSED_EXAMPLES_DIR) || $(FAIL)
