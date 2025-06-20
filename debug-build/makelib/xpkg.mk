@@ -53,8 +53,8 @@ ifeq ($(origin BUILD_REGISTRY), undefined)
 BUILD_REGISTRY := build-$(shell echo $(HOSTNAME)-$(ROOT_DIR) | $(SHA256SUM) | cut -c1-8)
 endif
 
-XPKG_REG_ORGS ?= xpkg.upbound.io/crossplane
-XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/crossplane
+XPKG_REG_ORGS ?= xpkg.upbound.io/tehilathestudent
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/tehilathestudent
 XPKG_LINUX_PLATFORMS := $(filter linux_%,$(PLATFORMS))
 XPKG_ARCHS := $(subst linux_,,$(filter linux_%,$(PLATFORMS)))
 XPKG_PLATFORMS := $(subst _,/,$(subst $(SPACE),$(COMMA),$(filter linux_%,$(PLATFORMS))))
@@ -77,7 +77,7 @@ UP ?= up
 # 1: xpkg
 define xpkg.build.targets
 xpkg.build.$(1):
-	echo ----------------------- debug-build/makelib/xpkg.mk $@
+	echo ----------------------- debug-build/makelib/xpkg.mk xpkg.build.$(1)
 ifeq ($(XPKG_CLEANUP_EXAMPLES_ENABLED),true)
 	rm -rf $(WORK_DIR)/xpkg-cleaned-examples
 	GOOS=$(HOSTOS) GOARCH=$(TARGETARCH) go run github.com/upbound/uptest/cmd/cleanupexamples@$(XPKG_CLEANUP_EXAMPLES_VERSION) $(XPKG_EXAMPLES_DIR) $(XPKG_PROCESSED_EXAMPLES_DIR) || $(FAIL)

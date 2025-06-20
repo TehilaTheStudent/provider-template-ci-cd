@@ -117,7 +117,7 @@ $(foreach r,$(REGISTRY_ORGS), $(foreach i,$(IMAGES),$(eval $(call repo.targets,$
 # Common Targets
 
 do.build.image.%:
-	echo ----------------------- debug-build/makelib/imagelight.mk $@
+	echo ----------------------- debug-build/makelib/imagelight.mk $@ $*
 	$(MAKE) -C $(IMAGE_DIR)/$* IMAGE_PLATFORMS=$(IMAGE_PLATFORM) IMAGE=$(BUILD_REGISTRY)/$*-$(ARCH) img.build
 do.build.images: $(foreach i,$(IMAGES), do.build.image.$(i))
 do.skip.images:

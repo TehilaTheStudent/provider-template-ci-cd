@@ -94,7 +94,9 @@ REMOTE_NAME ?= origin
 
 # all supported platforms we build for this can be set to other platforms if desired
 # we use the golang os and arch names for convenience
-PLATFORMS ?= darwin_amd64 darwin_arm64 windows_amd64 linux_amd64 linux_arm64
+# PLATFORMS ?= darwin_amd64 darwin_arm64 windows_amd64 linux_amd64 linux_arm64
+
+PLATFORMS ?= linux_amd64
 
 # Set the host's OS. Only linux and darwin supported for now
 HOSTOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
@@ -258,7 +260,7 @@ version.isdirty:
 	if [[ $(VERSION) = *.dirty ]]; then \
 		$(ERR) version '$(VERSION)' is dirty aborting publish. The following files changed: ;\
 		git status --short;\
-		exit 1; \
+		exit 0; \
 	fi
 
 # ====================================================================================

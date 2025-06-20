@@ -3,7 +3,10 @@
 PROJECT_NAME := provider-template-ci-cd
 PROJECT_REPO := github.com/tehilathestudent/$(PROJECT_NAME)
 
-PLATFORMS ?= linux_amd64 linux_arm64
+# PLATFORMS ?= linux_amd64 linux_arm64
+
+PLATFORMS ?= linux_amd64
+
 include debug-build/makelib/common.mk
 
 # ====================================================================================
@@ -31,7 +34,9 @@ include debug-build/makelib/k8s_tools.mk
 # ====================================================================================
 # Setup Images
 
-IMAGES = provider-template
+# IMAGES = provider-template
+IMAGES = provider-template-ci-cd
+
 include debug-build/makelib/imagelight.mk
 
 # ====================================================================================
@@ -41,7 +46,9 @@ XPKG_REG_ORGS ?= xpkg.upbound.io/tehilathestudent
 # NOTE(hasheddan): skip promoting on xpkg.upbound.io as channel tags are
 # inferred.
 XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/tehilathestudent
-XPKGS = provider-template
+# XPKGS = provider-template
+XPKGS = provider-template-ci-cd
+
 include debug-build/makelib/xpkg.mk
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
