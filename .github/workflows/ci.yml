@@ -234,7 +234,7 @@ jobs:
 
       - name: Build Artifacts
         # run: make -j2 build.all
-        run: make -j2 build
+        run: make build
 
         env:
           # We're using docker buildx, which doesn't actually load the images it
