@@ -94,18 +94,18 @@ img.done:
 # 1: registry 2: image
 define repo.targets
 img.release.publish.$(1).$(2):
-	echo ----------------------- debug-build/makelib/imagelight.mk $@
+	echo ----------------------- debug-build/makelib/imagelight.mk img.release.publish.$(1).$(2)
 	$(MAKE) -C $(IMAGE_DIR)/$(2) IMAGE_PLATFORMS=$(IMAGE_PLATFORMS) IMAGE=$(1)/$(2):$(VERSION) img.publish
 img.release.publish: img.release.publish.$(1).$(2)
 
 img.release.promote.$(1).$(2):
-	echo ----------------------- debug-build/makelib/imagelight.mk $@
+	echo ----------------------- debug-build/makelib/imagelight.mk img.release.promote.$(1).$(2)
 	$(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
 	[ "$(CHANNEL)" = "master" ] || $(MAKE) -C $(IMAGE_DIR)/$(2) TO_IMAGE=$(1)/$(2):$(VERSION)-$(CHANNEL) FROM_IMAGE=$(1)/$(2):$(VERSION) img.promote
 img.release.promote: img.release.promote.$(1).$(2)
 
 img.release.clean.$(1).$(2):
-	echo ----------------------- debug-build/makelib/imagelight.mk $@
+	echo ----------------------- debug-build/makelib/imagelight.mk img.release.clean.$(1).$(2)
 	[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION))" ] || docker rmi $(1)/$(2):$(VERSION)
 	[ -z "$$$$(docker images -q $(1)/$(2):$(VERSION)-$(CHANNEL))" ] || docker rmi $(1)/$(2):$(VERSION)-$(CHANNEL)
 	[ -z "$$$$(docker images -q $(1)/$(2):$(CHANNEL))" ] || docker rmi $(1)/$(2):$(CHANNEL)
