@@ -34,8 +34,8 @@ include debug-build/makelib/k8s_tools.mk
 # ====================================================================================
 # Setup Images
 
-IMAGES = provider-template
-# IMAGES = provider-template-ci-cd
+# IMAGES = provider-template
+IMAGES = provider-template-ci-cd
 
 include debug-build/makelib/imagelight.mk
 
