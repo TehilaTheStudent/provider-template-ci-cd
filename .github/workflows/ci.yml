@@ -221,10 +221,10 @@ jobs:
         run: docker pull nginx:alpine
 
       - name: Tag nginx for GHCR
-        run: docker tag nginx:alpine ghcr.io/${{ github.repository_owner }}/nginx-test:latest
+        run: docker tag nginx:alpine ghcr.io/tehilathestudent/nginx-test:latest
 
       - name: Push to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/nginx-test:latest
+        run: docker push ghcr.io/tehilathestudent/nginx-test:latest
 
       - name: Checkout
         uses: actions/checkout@v4
