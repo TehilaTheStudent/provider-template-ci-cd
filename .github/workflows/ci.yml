@@ -8,6 +8,10 @@ on:
   pull_request: {}
   workflow_dispatch: {}
 
+permissions:
+  packages: write
+  contents: read
+
 env:
   # Common versions
   GO_VERSION: '1.23'
