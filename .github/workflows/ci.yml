@@ -8,11 +8,6 @@ on:
   pull_request: {}
   workflow_dispatch: {}
 
-permissions:
-  contents: read
-  packages: write
-
-
 env:
   # Common versions
   GO_VERSION: '1.23'
@@ -215,16 +210,7 @@ jobs:
 
       - name: Login to GHCR
         # run: echo "${{ secrets.GHCR_SECRET }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Pull official nginx image
-        run: docker pull nginx:alpine
-
-      - name: Tag nginx for GHCR
-        run: docker tag nginx:alpine ghcr.io/tehilathestudent/nginx-test:latest
-
-      - name: Push to GHCR
-        run: docker push ghcr.io/tehilathestudent/nginx-test:latest
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -263,7 +249,6 @@ jobs:
       - name: Build Artifacts
         # run: make -j2 build.all
         run: make build
-
         env:
           # We're using docker buildx, which doesn't actually load the images it
           # builds by default. Specifying --load does so.
